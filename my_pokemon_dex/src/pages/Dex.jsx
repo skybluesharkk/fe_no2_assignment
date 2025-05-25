@@ -6,8 +6,13 @@ import { useState } from 'react';
 import { useNavigate } from 'react-router-dom'
 
 const StLayout = styled.div`
-    width: 90%;
+    width: 100%;
+    padding: 0 16px;
+
+    @media (min-width: 768px) {
+    max-width: 1800px;
     margin: 0 auto;
+    }
 `;
 
 const StDashboard = styled.div`
