@@ -6,20 +6,18 @@ import { useState } from 'react';
 import { useNavigate } from 'react-router-dom'
 
 const StLayout = styled.div`
-
-  width: 90%;
-  margin: 0 auto;
+    width: 90%;
+    margin: 0 auto;
 `;
-
 
 const StDashboard = styled.div`
     background-color: #f7f6f3;
-
     display:flex;
     justify-content: center; 
     align-items: center;
     flex-direction: column; 
-    `;
+`;
+
 const StDbPokemon = styled.div`
     width: 100%;
     display: flex;
@@ -27,8 +25,8 @@ const StDbPokemon = styled.div`
     padding: 20px;   
     justify-content: center; 
     align-items: center;
+`;
 
-`
 const Pokeball = styled.div`
     flex: 0 0 60px; 
     margin: 20px;
@@ -40,7 +38,8 @@ const Pokeball = styled.div`
         width: 100%;
         height: auto;
       }
-`
+`;
+
 const StListContainer = styled.div`
     gap: 16px; 
     display: flex;
@@ -63,6 +62,7 @@ const StCard = styled.div`
     display: flex;
     flex-direction: column;    
 `;
+
 const StPlusButton = styled.button`
     width: auto;
     padding: 5px 10px;
@@ -74,12 +74,14 @@ const StPlusButton = styled.button`
     justify-content: center;
     color: white;
     font-size:15px;
-    `;
+`;
+
 const StMyPokemonText = styled.h2`
     color: red;
     font-style: bold;
     font-size: 30px;
-`
+`;
+
 const StCardBody = styled.div`
   flex: 1;
   display: flex;
@@ -88,6 +90,7 @@ const StCardBody = styled.div`
   justify-content: center;
   cursor: pointer;
 `;
+
 const Dashboard = ({ selected, onRemove }) => {
     return (
         <StDashboard>
@@ -139,6 +142,7 @@ const PokemonCard = ({ pokemon, onAdd, onRemove, onCardClick }) => {
         </StCard>
     )
 }
+
 const PokemonList = ({ onAdd, onCardClick }) => {
     return (
         <StListContainer>
@@ -150,6 +154,7 @@ const PokemonList = ({ onAdd, onCardClick }) => {
         </StListContainer>
     )
 }
+
 const Dex = () => {
 
     const [selectedPokemons, setSelectedPokemons] = useState([])
@@ -169,8 +174,6 @@ const Dex = () => {
         setSelectedPokemons(prev => [...prev, pokemon]);
 
     }
-
-
 
     const handleRemove = id => {
         setSelectedPokemons(prev => prev.filter(p => p.id !== id))
