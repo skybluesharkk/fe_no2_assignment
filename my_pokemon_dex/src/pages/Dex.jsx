@@ -1,13 +1,17 @@
 import React from 'react'
-import MOCK_DATA from '../mock'
 import styled from 'styled-components';
 import pokeballImg from "../assets/pokeball.png";
-import { useState } from 'react';
-import { useNavigate } from 'react-router-dom'
+import { useContext } from 'react';
+import { PokemonContext } from '../context/PokemonContext';
 
 const StLayout = styled.div`
-    width: 90%;
+    width: 100%;
+    padding: 0 16px;
+    
+    @media (min-width: 768px) {
+    max-width: 1800px;
     margin: 0 auto;
+    }
 `;
 
 const StDashboard = styled.div`
@@ -91,7 +95,12 @@ const StCardBody = styled.div`
   cursor: pointer;
 `;
 
-const Dashboard = ({ selected, onRemove }) => {
+const Dashboard = () => {
+
+    const {
+        selectedPokemons,
+    } = useContext(PokemonContext);
+
     return (
         <StDashboard>
             <StMyPokemonText>나만의 포켓몬</StMyPokemonText>
@@ -99,12 +108,12 @@ const Dashboard = ({ selected, onRemove }) => {
                 {Array(6)
                     .fill(null)
                     .map((_, i) => {
-                        const poke = selected[i]
-                        return poke ? (
+                        const pokemon = selectedPokemons[i]
+                        return pokemon ? (
                             <PokemonCard
-                                key={poke.id}
-                                pokemon={poke}
-                                onRemove={() => onRemove(poke.id)}
+                                key={pokemon.id}
+                                pokemon={pokemon}
+                                isList={false}
                             />
                         ) : (
 
@@ -121,34 +130,42 @@ const Dashboard = ({ selected, onRemove }) => {
     )
 }
 
-const PokemonCard = ({ pokemon, onAdd, onRemove, onCardClick }) => {
+const PokemonCard = ({ pokemon,isList }) => {
+    const { add, remove, goToDetail,selectedPokemons } = useContext(PokemonContext);
+    const isSelected = selectedPokemons.some(p => p.id === pokemon.id);
+
+    const handleCheck = ()=>{
+        isList
+        ? add(pokemon)
+        : isSelected
+        ? remove(pokemon.id)
+        : add(pokemon)
+    }
     return (
         <StCard >
-            <StCardBody onClick={() => onCardClick(pokemon.id)}>
+            <StCardBody onClick={() => goToDetail(pokemon.id)}>
                 <img src={pokemon.img_url} alt="" />
                 <h3>{pokemon.korean_name}</h3>
                 <p>No. {pokemon.id}</p>
             </StCardBody>
-            {
-                onAdd ? (
-                    <StPlusButton onClick={() => onAdd(pokemon)}>추가</StPlusButton>
-                )
-                    :
-                    (
-                        <StPlusButton onClick={() => onRemove(pokemon.id)}>삭제</StPlusButton>
-                    )
-            }
+            <StPlusButton
+                type="button"
+                onClick={handleCheck}
+            >
+                {isList ? '추가' : isSelected ? '삭제' : '추가'}
+            </StPlusButton>
 
         </StCard>
     )
 }
 
-const PokemonList = ({ onAdd, onCardClick }) => {
+const PokemonList = () => {
+    const { pokemons } = useContext(PokemonContext)
     return (
         <StListContainer>
-            {MOCK_DATA.map(function (Pokemon) {
+            {pokemons.map(function (Pokemon) {
                 return (
-                    <PokemonCard key={Pokemon.id} pokemon={Pokemon} onAdd={onAdd} onCardClick={onCardClick} />
+                    <PokemonCard key={Pokemon.id} pokemon={Pokemon} isList={true} />
                 )
             })}
         </StListContainer>
@@ -157,34 +174,10 @@ const PokemonList = ({ onAdd, onCardClick }) => {
 
 const Dex = () => {
 
-    const [selectedPokemons, setSelectedPokemons] = useState([])
-    const navigate = useNavigate();
-    const handleAdd = (pokemon) => {
-
-        if (selectedPokemons.find(p => p.id === pokemon.id)) {
-            alert("이미 선택된 포켓몬입니다.");
-            return;
-        }
-
-        if (selectedPokemons.length === 6) {
-            alert("더 이상 선택할 수 없습니다.");
-            return;
-        }
-
-        setSelectedPokemons(prev => [...prev, pokemon]);
-
-    }
-
-    const handleRemove = id => {
-        setSelectedPokemons(prev => prev.filter(p => p.id !== id))
-    }
-    const handleOnCardClick = id => {
-        navigate(`/detail?id=${id}`)
-    }
     return (
         <StLayout>
-            <Dashboard selected={selectedPokemons} onRemove={handleRemove} />
-            <PokemonList onAdd={handleAdd} onCardClick={handleOnCardClick} />
+            <Dashboard />
+            <PokemonList />
         </StLayout>
     )
 }

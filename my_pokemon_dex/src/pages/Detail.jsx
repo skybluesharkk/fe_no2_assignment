@@ -1,7 +1,8 @@
 import React from 'react'
 import { useSearchParams,useNavigate } from 'react-router-dom'
-import MOCK_DATA from '../mock'
 import styled from 'styled-components'
+import { PokemonContext } from '../context/PokemonContext'
+import { useContext } from 'react'
 
 const StDetail = styled.div`
     padding: 16px;
@@ -43,10 +44,11 @@ const StButton = styled.button`
 `;
 
 const Detail = () => {
-    const [searchParams] = useSearchParams()        
-    const navigate = useNavigate()
+    const [searchParams] = useSearchParams();        
+    const navigate = useNavigate();
+    const {pokemons} = useContext(PokemonContext);
     const id = searchParams.get('id')
-    const pokemon = MOCK_DATA.find(p => p.id === Number(id))
+    const pokemon = pokemons.find(p => p.id === Number(id))
 
     if (!pokemon){
         return (
